@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+// Schema definitions from PROJECT_STRUCTURE.md
+model User {
+  id        String   @id @default(uuid())
+  role      String
+  name      String
+  password  String
+  createdAt DateTime @default(now())
+}
+
+model Agent {
+  id        String     @id @default(uuid())
+  name      String
+  email     String     @unique
+  phone     String?
+  password  String
+  active    Boolean    @default(true)
+  createdAt DateTime   @default(now())
+  customers Customer[]
+}
+
+model Customer {
+  id        String     @id @default(uuid())
+  name      String
+  address   String?
+  phone     String?
+  email     String?
+  agentId   String?
+  agent     Agent?     @relation(fields: [agentId], references: [id])
+  createdAt DateTime   @default(now())
+  orders    Order[]
+  complaints Complaint[]
+}
+
+// Add remaining models as defined in PROJECT_STRUCTURE.md
